@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>マナーマスターへの道：究極の30問</title>
+    <style>
+        /* ベース設定：iPad標準フォントを使用 */
+        :root {
+            --primary-color: #4f46e5; /* Indigo 600 */
+            --primary-hover: #4338ca; /* Indigo 700 */
+            --bg-color: #eef2ff; /* Indigo 50 */
+            --text-main: #1e293b; /* Slate 800 */
+            --text-sub: #64748b; /* Slate 500 */
+            --white: #ffffff;
+            --danger: #ef4444;
+            --success-bg: #dcfce7;
+            --success-border: #22c55e;
+            --error-bg: #fee2e2;
+            --error-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-main);
+        }
+
+        /* ヘッダーエリア */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #312e81; /* Indigo 900 */
+            margin: 0 0 4px 0;
+        }
+
+        .header p {
+            font-size: 0.875rem;
+            color: var(--primary-color);
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* メインカード */
+        #app {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--white);
+            border-radius: 32px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            min-height: 650px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* プログレスバー */
+        #progress-container {
+            width: 100%;
+            background-color: #f1f5f9;
+            height: 12px;
+            position: relative;
+            display: none; /* JSで表示制御 */
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #60a5fa, #4f46e5);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        #progress-text {
+            position: absolute;
+            right: 8px;
+            top: 14px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* コンテンツエリア */
+        .content {
+            padding: 32px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ユーティリティ */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .flex-grow { flex-grow: 1; }
+        .my-auto { margin-top: auto; margin-bottom: auto; }
+
+        /* スタート画面 */
+        .start-screen-content {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .emoji-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .big-emoji {
+            font-size: 6rem;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        .badge {
+            position: absolute;
+            bottom: -5px;
+            right: -10px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .title-group h2 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+        }
+
+        .title-group p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ボタン共通 */
+        .btn-primary {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 16px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            background-color: var(--primary-hover);
+        }
+
+        /* クイズ画面 */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #question-number {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        #category-tag {
+            background-color: #e0e7ff;
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 1px solid #c7d2fe;
+        }
+
+        #illustration-box {
+            width: 100%;
+            height: 100px;
+            background-color: #f8fafc;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        #question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 3.5rem;
+            margin: 0 0 20px 0;
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            width: 100%;
+            text-align: left;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:active {
+            background-color: #eef2ff;
+            border-color: #818cf8;
+            transform: scale(0.99);
+        }
+
+        .quit-btn-container {
+            margin-top: auto;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .quit-btn {
+            font-size: 0.75rem;
+            color: #f87171;
+            background: none;
+            border: 1px solid #fecaca;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .quit-btn:active {
+            background-color: #fef2f2;
+        }
+
+        /* モーダル */
+        #feedback-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 100;
+        }
+
+        .modal-card {
+            background-color: white;
+            border-radius: 40px;
+            padding: 32px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #feedback-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 8px 0;
+        }
+
+        .feedback-desc-box {
+            background-color: #f8fafc;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+
+        /* 結果画面 */
+        .result-box {
+            background: linear-gradient(135deg, #eef2ff 0%, #eff6ff 100%);
+            padding: 32px;
+            border-radius: 40px;
+            border: 2px solid white;
+            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .score-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #818cf8;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .score-total {
+            font-size: 1.5rem;
+            color: #a5b4fc;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background-color: #334155;
+            color: white;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 16px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        /* アニメーション */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(5%); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Area -->
+    <div class="header">
+        <h1>高校生のためのビジネスマナー</h1>
+        <p>Ultimate 30 Challenges</p>
+    </div>
+
+    <!-- Main Container -->
+    <div id="app">
+        
+        <!-- Progress Bar Area -->
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+            <div id="progress-text"></div>
+        </div>
+
+        <div class="content">
+            
+            <!-- Start Screen -->
+            <div id="start-screen" class="start-screen-content my-auto">
+                <div class="emoji-container">
+                    <div class="big-emoji">🔥</div>
+                    <div class="badge">30 Questions</div>
+                </div>
+                <div class="title-group text-center">
+                    <h2>究極のマナーマスター試験</h2>
+                    <p>全30問の難関に挑戦！<br>社会に出る前に完璧なマナーを身につけよう。</p>
+                </div>
+                <button onclick="startQuiz()" class="btn-primary">
+                    試験を開始する
+                </button>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quiz-screen" class="hidden flex-grow fade-in" style="display: flex; flex-direction: column;">
+                <div class="quiz-header">
+                    <span id="question-number">Question 01</span>
+                    <span id="category-tag">CATEGORY</span>
+                </div>
+
+                <div id="illustration-box">
+                    <!-- Icon injected by JS -->
+                </div>
+
+                <h2 id="question-text"></h2>
+                
+                <div id="options-container">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Quit Button -->
+                <div class="quit-btn-container">
+                    <button onclick="confirmQuit()" class="quit-btn">
+                        ⚠️ 終了してタイトルに戻る
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feedback Modal -->
+            <div id="feedback-overlay" class="hidden">
+                <div class="modal-card">
+                    <div id="feedback-icon" style="font-size: 5rem; margin-bottom: 1rem;"></div>
+                    <h3 id="feedback-title"></h3>
+                    <div class="feedback-desc-box">
+                        <p id="feedback-desc" style="margin: 0;"></p>
+                    </div>
+                    <button onclick="nextQuestion()" class="btn-primary">
+                        次へ進む
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="hidden text-center fade-in my-auto">
+                <div id="result-emoji" style="font-size: 6rem; margin-bottom: 0.5rem;"></div>
+                <h2 style="font-size: 2rem; font-weight: 900; color: var(--text-main); margin-bottom: 1rem; text-transform: uppercase;">Result</h2>
+                <div class="result-box">
+                    <span class="score-label">スコア</span>
+                    <div class="score-value"><span id="score-display">0</span><span class="score-total"> / 30</span></div>
+                </div>
+                <p id="result-message" style="color: var(--text-sub); margin-bottom: 2rem; padding: 0 10px;"></p>
+                <button onclick="startQuiz()" class="btn-primary">
+                    もう一度挑戦
+                </button>
+                <button onclick="resetQuiz()" class="btn-secondary">
+                    タイトル画面へ
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { cat: "第一印象", icon: "🤝", q: "初対面の挨拶で、相手に信頼感を与えるために最も重要な表情は？", opts: ["真剣な無表情", "穏やかな笑顔", "大きな口を開けた笑い", "目線をそらした顔"], ans: 1, desc: "アイコンタクトを伴う穏やかな笑顔は、安心感と信頼を与えます。" },
+            { cat: "挨拶", icon: "⏰", q: "出勤時、職場の入り口で同僚と会いました。何と言う？", opts: ["お疲れ様です", "こんにちは", "おはようございます", "失礼します"], ans: 2, desc: "朝だけでなく、その日最初に会う時は「おはようございます」が基本です。" },
+            { cat: "身だしなみ", icon: "👔", q: "スーツや制服の着こなしで、清潔感を出すための注意点は？", opts: ["高級なブランドを選ぶ", "シワや汚れがないか確認", "派手なネクタイを締める", "毎日違う服を着る"], ans: 1, desc: "清潔感は「手入れの行き届いた状態」を指します。シワや汚れは厳禁です。" },
+            { cat: "敬語", icon: "💬", q: "上司に「何か飲みますか？」と尋ねる際の正しい敬語は？", opts: ["何をお飲みになりますか？", "何を飲まれますか？", "何をお飲みしますか？", "何を飲みますか？"], ans: 0, desc: "相手の動作には「お～になる」という尊敬語を使うのが最も丁寧です。" },
+            { cat: "電話対応", icon: "📱", q: "電話中に相手の声が聞き取りにくい場合、どう伝えるのが丁寧？", opts: ["えっ、何ですか？", "声が小さいですよ", "電波が悪いみたいです", "恐れ入りますが、少しお電話が遠いようです"], ans: 3, desc: "「声が小さい」と責めるのではなく「お電話が遠い」というクッション言葉を使います。" },
+            { cat: "訪問マナー", icon: "🚪", q: "取引先を訪問。受付での名乗り方として正しいのは？", opts: ["〇〇高校の△△です", "〇〇の△△と申しますが", "〇〇から来ました△△です", "お世話になっております、〇〇の△△です"], ans: 3, desc: "「お世話になっております」から始め、所属と氏名をはっきり名乗ります。" },
+            { cat: "席次（上座）", icon: "🚗", q: "タクシーに上司と2人で乗る場合、最も目上の人が座る場所（上座）は？", opts: ["助手席", "運転席の真後ろの席", "後部座席の右側", "後部座席の中央"], ans: 1, desc: "タクシーでは運転席の真後ろが一番安全で上座とされます。" },
+            { cat: "言葉遣い", icon: "🙇", q: "ミスをしてしまった際、上司への謝罪として適切なのは？", opts: ["すいませんでした", "申し訳ございませんでした", "以後気をつけます", "悪気はなかったんです"], ans: 1, desc: "ビジネスでの謝罪は「申し訳ございませんでした」が最も正式です。" },
+            { cat: "報連相", icon: "🏃", q: "仕事でトラブルが発生！どのタイミングで報告すべき？", opts: ["解決してから", "一日の終わりにまとめて", "まずは自分で考えてから", "発生してすぐ、現状を"], ans: 3, desc: "トラブルは「悪い報告ほど早く」が鉄則です。被害を最小限に抑えられます。" },
+            { cat: "身だしなみ", icon: "🧼", q: "仕事中の香水の利用について、適切な考え方は？", opts: ["自分の個性を出すためにつける", "汗臭くないよう多めにつける", "周囲に不快感を与えないよう控える", "高級な香りなら問題ない"], ans: 2, desc: "匂いは好みが分かれるため、ビジネスの場では無香か微香が基本です。" },
+            { cat: "言葉遣い", icon: "🥤", q: "お客様から「コーヒーをどうぞ」と言われた時の返答は？", opts: ["いただきます", "ありがたく頂戴いたします", "結構です", "もらいます"], ans: 1, desc: "「いただく」よりさらに丁寧な「頂戴いたします」を使うと印象が良いです。" },
+            { cat: "訪問マナー", icon: "🧥", q: "冬の訪問。コートを脱ぐタイミングはいつ？", opts: ["受付で挨拶する直前", "建物の建物外、または入り口付近", "応接室に案内されてから", "エレベーターの中"], ans: 1, desc: "本来は「外の汚れを持ち込まない」ために入り口の外で脱ぐのがマナーです。" },
+            { cat: "名刺交換", icon: "📇", q: "頂いた名刺を扱う際、NGな行動はどれ？", opts: ["両手で受け取る", "テーブルに置く", "相手のロゴの上に指を置く", "名刺入れの上に乗せる"], ans: 2, desc: "名刺は相手の分身。文字やロゴを指で隠すのは失礼にあたります。" },
+            { cat: "メール", icon: "📧", q: "ビジネスメールの件名として、最も適切なのは？", opts: ["お疲れ様です", "先日はありがとうございました", "【ご相談】〇〇プロジェクトの進捗について", "至急確認してください"], ans: 2, desc: "件名だけで内容と優先順位がわかるように書くのがマナーです。" },
+            { cat: "態度", icon: "👂", q: "上司の話を聞く際、適切な態度はどれ？", opts: ["腕を組んで聞く", "メモを取りながら聞く", "相手の目を見つめ続ける", "黙ってうつむいて聞く"], ans: 1, desc: "メモを取る姿は、真剣に聞いている姿勢と正確さを伝えます。" },
+            { cat: "席次", icon: "🛋️", q: "応接室での上座は、一般的にどこ？", opts: ["出入り口に近い席", "出入り口から遠い奥の席", "テーブルの真ん中", "どこでも良い"], ans: 1, desc: "出入り口から一番遠い「奥の席」が上座の基本です。" },
+            { cat: "言葉遣い", icon: "☕", q: "お客様に「お茶かコーヒー、どちらがいいですか？」を丁寧に言うと？", opts: ["どっちにしますか？", "どちらになさいますか？", "どっちがよろしいですか？", "どちらにしますか？"], ans: 1, desc: "「する」の尊敬語である「なさる」を使うのが適切です。" },
+            { cat: "来客対応", icon: "🚪", q: "ドアをノックする回数、ビジネスシーンでの標準は？", opts: ["2回", "3回", "4回", "ノックしない"], ans: 1, desc: "2回はトイレ。ビジネスや入室時は3回以上が一般的です。" },
+            { cat: "態度", icon: "⌚", q: "大事な会議にどうしても5分遅れそうな時。どうする？", opts: ["黙って急いで行く", "5分くらいなら連絡しない", "判明した時点で理由と到着時刻を連絡", "謝るのが嫌なので休む"], ans: 2, desc: "遅れるとわかった瞬間に、誠実に連絡を入れるのがマナーです。" },
+            { cat: "紹介マナー", icon: "👥", q: "自分の上司を、お客様に紹介する時の言い方は？", opts: ["〇〇課長です", "こちらが上司の〇〇です", "上司の〇〇課長さんです", "部長の〇〇を、ご紹介します"], ans: 1, desc: "社外の人に対し、身内（上司）を呼ぶ時は役職を付けず呼び捨てにします。" },
+            { cat: "お辞儀", icon: "📐", q: "「本日は誠にありがとうございました」と言う際のお辞儀の角度は？", opts: ["15度", "30度", "45度", "10度"], ans: 2, desc: "深い感謝を伝える場合は、最敬礼の45度で行います。" },
+            { cat: "電話対応", icon: "✍️", q: "電話で相手が名乗ったが、漢字がわからない。どう聞く？", opts: ["どういう漢字ですか？", "適当に書いておきます", "恐れ入りますが、どのような漢字を書かれますか？", "難しい名前ですね"], ans: 2, desc: "復唱確認を含め、丁寧に尋ねるのがプロの対応です。" },
+            { cat: "マインド", icon: "🎁", q: "お中元や手土産を渡す際、添える言葉としてふさわしいのは？", opts: ["つまらないものですが", "心ばかりの品ですが、お受け取りください", "おいしいので食べてください", "高かったのですが"], ans: 1, desc: "最近は「つまらないもの」より「お口に合えば」「心ばかり」が好まれます。" },
+            { cat: "身だしなみ", icon: "💅", q: "接客業におけるネイルやアクセサリーの基本は？", opts: ["流行を取り入れる", "個性をアピールする", "清潔感があり、業務の邪魔にならない程度", "自由で良い"], ans: 2, desc: "あくまで「お客様にどう見えるか」と「安全性・機能性」が優先されます。" },
+            { cat: "メール", icon: "✉️", q: "メールの返信のタイミングとして、最も望ましいのは？", opts: ["3日以内", "1週間以内", "24時間以内（できれば当日）", "気が向いた時"], ans: 2, desc: "ビジネスではスピードが信頼に直結します。24時間以内が目安です。" },
+            { cat: "お辞儀", icon: "👄", q: "お辞儀をする際、言葉を発するタイミングは？", opts: ["お辞儀をしながら言う", "言い終わってからお辞儀する", "お辞儀してから言う", "どちらでも良い"], ans: 1, desc: "語先後礼（ごせんごれい）と言い、言葉を伝えてからお辞儀をするのが丁寧です。" },
+            { cat: "言葉遣い", icon: "👵", q: "目上の人に「頑張ってください」と言うのは？", opts: ["とても良い", "失礼にあたる（お疲れ様です等が無難）", "親しみがわく", "場合による"], ans: 1, desc: "「頑張って」は評価する側が使うニュアンスがあるため、目上の人には避けます。" },
+            { cat: "態度のマナー", icon: "🪑", q: "椅子に座る際、深く腰掛けた後の背もたれはどう使う？", opts: ["リラックスして寄りかかる", "背もたれには寄りかからず、背筋を伸ばす", "前のめりになる", "片肘をつく"], ans: 1, desc: "背もたれに寄りかかりすぎると、だらしない印象を与えてしまいます。" },
+            { cat: "SNSマナー", icon: "📸", q: "会社のイベントの様子をSNSにアップしたい。注意点は？", opts: ["すぐにアップする", "会社の許可を取り、他人の顔に配慮する", "内緒でアップする", "面白い加工をして載せる"], ans: 1, desc: "機密情報や肖像権、プライバシーの保護は社会人の必須ルールです。" },
+            { cat: "究極の目的", icon: "🌈", q: "ビジネスマナーを学ぶ本当のメリットは何？", opts: ["上司に褒められる", "相手を不快にさせず、仕事を円滑に進めるため", "ルールを守るのが好きだから", "給料が上がるから"], ans: 1, desc: "マナーは円滑な人間関係を築くための共通言語。お互いのためにあります。" }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('progress-container').style.display = 'block';
+            
+            // 状態リセット
+            score = 0;
+            currentIdx = 0;
+            document.getElementById('result-screen').classList.add('hidden');
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            document.getElementById('question-number').innerText = `Question ${String(currentIdx + 1).padStart(2, '0')}`;
+            document.getElementById('progress-text').innerText = `${currentIdx + 1} / 30`;
+            document.getElementById('category-tag').innerText = q.cat;
+            document.getElementById('illustration-box').innerText = q.icon;
+            document.getElementById('question-text').innerText = q.q;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.opts.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "quiz-option";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(i);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('progress-bar').style.width = `${((currentIdx) / questions.length) * 100}%`;
+        }
+
+        function checkAnswer(selected) {
+            const q = questions[currentIdx];
+            const isCorrect = selected === q.ans;
+            
+            const title = document.getElementById('feedback-title');
+            const icon = document.getElementById('feedback-icon');
+
+            if (isCorrect) {
+                score++;
+                icon.innerText = '✨';
+                title.innerText = '正解！';
+                title.style.color = '#4f46e5';
+            } else {
+                icon.innerText = '💧';
+                title.innerText = 'おしい';
+                title.style.color = '#64748b';
+            }
+            
+            document.getElementById('feedback-desc').innerText = q.desc;
+            document.getElementById('feedback-overlay').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            document.getElementById('feedback-overlay').classList.add('hidden');
+            currentIdx++;
+            
+            if (currentIdx < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function confirmQuit() {
+            if(confirm("現在の進捗を中断して、タイトル画面に戻りますか？\n（結果を確認したい場合は、最後までクイズを解いてください）")) {
+                 resetQuiz();
+            }
+        }
+        
+        function resetQuiz() {
+            score = 0;
+            currentIdx = 0;
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.getElementById('progress-container').style.display = 'none';
+            document.getElementById('progress-bar').style.width = '0%';
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('progress-container').style.display = 'none';
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('score-display').innerText = score;
+
+            let msg = ""; let emoji = "";
+            if (score === 30) {
+                msg = "パーフェクト！あなたは即戦力間違いなしのマナー達人です！";
+                emoji = "👑";
+            } else if (score >= 25) {
+                msg = "大変優秀です！自信を持って社会に飛び出してください。";
+                emoji = "⭐";
+            } else if (score >= 15) {
+                msg = "合格レベルです。細かい点を見直してさらに上を目指しましょう。";
+                emoji = "👍";
+            } else {
+                msg = "マナーは繰り返しの学習が大切。もう一度チャレンジして身につけよう。";
+                emoji = "🌱";
+            }
+            document.getElementById('result-message').innerText = msg;
+            document.getElementById('result-emoji').innerText = emoji;
+        }
+    </script>
+</body>
+</html>
